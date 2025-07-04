@@ -42,7 +42,7 @@ function resultEquation(){
     let operatorIndex = -1;
 
     console.log("2. Operadores definidos:", operators);
-    // achar o primeiro operador (NAO ESTA FUNCIONANDO POR ALGUM MOTIVO)
+    // achar o primeiro operador 
     for(let i=0; i < equationStrings.length;i++){
         const char = equationStrings[i];
         if(operators.includes(char)){
