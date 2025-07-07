@@ -38,6 +38,7 @@ function buttonClear(){
 function resultEquation(){
     let equationStrings = displayScreen.textContent;
     const operators = ['+','-','/','*','%'];
+    const priorityoperators=['/','*'];
     let operation = [];
     let operatorIndex = [];
 
@@ -62,42 +63,50 @@ function resultEquation(){
     let operands = [];
     let startIndex = 0;
     for (a=0; a < operation.length;a++){
-        const currentOperatorIndex  = operatorIndex[a];//{currentoperator:6}
+        const currentOperatorIndex  = operatorIndex[a];//{currentoperator:2}
         const operandString = equationStrings.substring(startIndex, currentOperatorIndex);// 0 2 ||  3 4 || 
-        operands.push(parseFloat(operandString));//{5}
-        startIndex = currentOperatorIndex + 1;//{starIndex:5}
+        operands.push(parseFloat(operandString));
+        startIndex = currentOperatorIndex + 1;
     }
 
     const lastOperands = equationStrings.substring(startIndex);
     operands.push(parseFloat(lastOperands));
     console.log(operands);
     
-
-    //transformar em numeros(DESATIVADO POIS CONVERTE DIRETO NO LOOP AGORA)
-    // const variable1 = parseFloat(operand1String);
-    // const variable2 = parseFloat(operand2String);
-
-
-    // // veficar se a extração foi bem-sucedida(INUTILIZADO)
-    // if(isNaN(variable1) || isNaN(variable2)){
-    //     displayScreen.innerText = "Conversão de numero mal sucedida"
-    // }
-    
     let result = 0;
     //operands{numeros},operation{tiposDeOperacao}
-    switch(operation){
-        case "%": result = variable1 % variable2;
+
+    for(i=0;i < operation;i++){
+        variableOperation= operation[i];
+        indexOp=operatorIndex[i];
+        if(variableOperation.includes(priorityoperators)){
+            choiceOperation(operands[i],operands[i+1],variableOperation);
+        }        
+        operands.pop(operands[i]);
+        operands.pop(operands[i+1]);
+        operands.push(result);
+        operation.pop(variableOperation)
+    }
+    updateDisplayWithResult(operands);
+}
+
+function choiceOperation(valor1,valor2,valor3){
+    whoOperation = valor3;
+    number1 = valor1;
+    number2= valor2;
+
+    switch(whoOperation){
+        case "%": result = number1 % number2;
         break;
-        case "*": result = variable1 * variable2;
+        case "*": result = number1 * number2;
         break;
-        case "+": result = variable1 + variable2;
+        case "+": result = number1 + number2;
         break;
-        case "-": result = variable1 - variable2;
+        case "-": result = number1 - number2;
         break;
-        case "/": result = variable1 / variable2;
+        case "/": result = number1 / number2;
         break;
         default: displayScreen.innerText = "Operation not detected" 
     }
-    updateDisplayWithResult(result)
+   return(result);
 }
-
